@@ -1,7 +1,6 @@
-/* Define a lavenderish background color for the entire dashboard */
+/* Define a lavender background color for the entire dashboard */
 body {
     background-color: #7b68ee;
-    /* Lavender */
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
@@ -17,7 +16,6 @@ h4 {
     padding: 20px;
     text-align: center;
     background-color: #a73d82;
-    /* MediumPurple */
     border-radius: 5px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
 }
@@ -40,14 +38,12 @@ h4 {
 /* Style the typography inside the Paper components */
 .dashboard-paper h6 {
     color: #9370db;
-    /* MediumPurple */
     font-weight: bold;
 }
 
 /* Style the record count and total traded volume */
 .dashboard-paper h3 {
     color: #7b68ee;
-    /* Lavender */
     font-size: 36px;
 }
 
