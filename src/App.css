@@ -1,0 +1,82 @@
+/* Define a lavenderish background color for the entire dashboard */
+body {
+    background-color: #7b68ee;
+    /* Lavender */
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Style the main heading */
+h4 {
+    color: white;
+    padding: 20px;
+    text-align: center;
+    background-color: #a73d82;
+    /* MediumPurple */
+    border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Style the Paper components */
+.dashboard-paper {
+    background-color: white;
+    padding: 20px;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.dashboard-paper:hover {
+    transform: scale(1.02);
+}
+
+/* Style the typography inside the Paper components */
+.dashboard-paper h6 {
+    color: #9370db;
+    /* MediumPurple */
+    font-weight: bold;
+}
+
+/* Style the record count and total traded volume */
+.dashboard-paper h3 {
+    color: #7b68ee;
+    /* Lavender */
+    font-size: 36px;
+}
+
+/* Style the tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table,
+th,
+td {
+    border: 1px solid #ccc;
+}
+
+th,
+td {
+    padding: 10px;
+    text-align: left;
+}
+
+/* Style the list items */
+.dashboard-paper ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.dashboard-paper li {
+    color: #333;
+    margin: 5px 0;
+    font-weight: bold;
+}
