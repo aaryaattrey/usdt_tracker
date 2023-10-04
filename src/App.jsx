@@ -160,7 +160,7 @@ function CountOfDistinctSellers() {
         <Grid >
             <Paper className="dashboard-paper">
                 <Typography variant="h6" gutterBottom>
-                    Count Of Distinct Sellers
+                    Unique Sellers
                 </Typography>
                 <Typography variant="h3">{count}</Typography>
             </Paper>
@@ -175,7 +175,7 @@ function CountOfDistinctBuyers() {
         <Grid >
             <Paper className="dashboard-paper">
                 <Typography variant="h6" gutterBottom>
-                    Count Of Distinct Buyers
+                    Unique Buyers
                 </Typography>
                 <Typography variant="h3">{count}</Typography>
             </Paper>

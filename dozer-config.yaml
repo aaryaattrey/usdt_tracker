@@ -42,7 +42,7 @@ sql: |
  FROM usdt_Transfer
  )
  SELECT
- t.window_start AS start, t.window_end AS end, (SUM(t.value))/1e6 AS traded_volume, AVG(t.value) AS averg_transaction
+ t.window_start AS start, t.window_end AS end, (SUM(t.value))/1e6 AS traded_volume, AVG(t.value) AS averg_transaction, MAX(t.value) AS max_transaction, MIN(t.value) AS min_transaction
  INTO sum
  FROM TUMBLE(data, currtime,'24 HOURS') t
  GROUP BY t.window_start, t.window_end;
@@ -84,13 +84,15 @@ sql: |
  JOIN off_chain e
  ON u.to = e.Address;
 
- SELECT DISTINCT from
+ SELECT from
  INTO distinct_sellers
- FROM usdt_Transfer;
+ FROM usdt_Transfer
+ GROUP BY from;
 
- SELECT DISTINCT  to 
+ SELECT  to 
  INTO distinct_buyers
- FROM usdt_Transfer;
+ FROM usdt_Transfer
+ GROUP BY to;
  
 endpoints:
 
