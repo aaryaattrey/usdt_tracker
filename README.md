@@ -1,5 +1,5 @@
 # Real-Time USDT Dashboard
-![Current-Dashboard](image.png)
+![Dashboard](image-1.png)
 
 ## To Run
 
@@ -17,10 +17,3 @@ dozer live
 pnpm run dev
 ```
 
-## To-Do
-
--  Currently only count syncs in real time, need to make TradedVolume and Buyer/Seller tables reflect changes in real time. They currently only update on page refresh.
-
-- Change time period if above changes stable.
-
-- Find a way to merge on chain and off chain data.
