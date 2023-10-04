@@ -1,6 +1,16 @@
 app_name: dashboard-app
 version: 1
 connections:
+  - config : !LocalStorage
+      details:
+        path: .
+      tables:
+        - !Table
+          name: eth_addresses
+          config: !CSV
+            path: data
+            extension: .csv
+    name: local
   - config: !Ethereum
       provider: !Log
         wss_url: wss://mainnet.infura.io/ws/v3/6c4873a01d144bdeaaf2588a743cf8e9
@@ -20,22 +30,34 @@ sources:
   - name: usdt_Transfer
     table_name: usdt_Transfer
     connection: eth_conn
+    
+  - name: off_chain
+    table_name: eth_addresses
+    connection: local  
 
 sql: |
 
+ WITH data AS (
+ SELECT value, NOW() AS currtime
+ FROM usdt_Transfer
+ )
+ SELECT
+ t.window_start AS start, t.window_end AS end, (SUM(t.value))/1e6 AS traded_volume, AVG(t.value) AS averg_transaction
+ INTO sum
+ FROM TUMBLE(data, currtime,'24 HOURS') t
+ GROUP BY t.window_start, t.window_end;
 
- SELECT from, to, (value)/1000000 as amount, NOW() as block_timestamp
+ SELECT from, to, value
  INTO transfers
  FROM usdt_Transfer;
- 
  
  WITH buyers_data AS (
  SELECT value, to, NOW() as currtime
  FROM usdt_Transfer
  )
- SELECT t.window_start AS start, t.window_end AS end, t.to, (SUM(t.value))/1000000 AS amount_bought
+ SELECT t.window_start AS start, t.window_end AS end, t.to AS BuyerAddress, (SUM(t.value))/1000000 AS amount_bought
  INTO buyers
- FROM TUMBLE(buyers_data, currtime,'2 MINUTE') t
+ FROM TUMBLE(buyers_data, currtime,'24 HOURS') t
  GROUP BY t.window_start, t.window_end, t.to;
  
  
@@ -43,38 +65,72 @@ sql: |
  SELECT value, from, NOW() as currtime
  FROM usdt_Transfer
  )
- SELECT t.window_start AS start, t.window_end AS end, t.from, (SUM(t.value))/1000000 AS amount_sold
+ SELECT t.window_start AS start, t.window_end AS end, t.from AS SellerAddress, (SUM(t.value))/1000000 AS amount_sold
  INTO sellers
- FROM TUMBLE(sellers_data, currtime,'2 MINUTE') t
+ FROM TUMBLE(sellers_data, currtime,'24 HOURS') t
  GROUP BY t.window_start, t.window_end, t.from;
 
+ SELECT e.Address AS seller_address,e.Name as Name, e.Label AS Authenticity
+ INTO identified_sellers 
+ FROM 
+ usdt_Transfer u
+ JOIN off_chain e
+ ON u.from = e.Address;
 
- WITH data AS (
- SELECT value, NOW() AS currtime
- FROM usdt_Transfer
- )
- SELECT
- t.window_start AS start, t.window_end AS end, (SUM(t.value))/1000000 AS traded_volume
- INTO sum
- FROM TUMBLE(data, currtime,'1 MINUTE') t
- GROUP BY t.window_start, t.window_end;
-  
+ SELECT e.Address AS buyer_address,e.Name as Name, e.Label AS Authenticity
+ INTO identified_buyers
+ FROM 
+ usdt_Transfer u
+ JOIN off_chain e
+ ON u.to = e.Address;
 
+ SELECT DISTINCT from
+ INTO distinct_sellers
+ FROM usdt_Transfer;
+
+ SELECT DISTINCT  to 
+ INTO distinct_buyers
+ FROM usdt_Transfer;
+ 
 endpoints:
+
+  # USDT Transfers
   - name: transfers
     table_name: transfers
     path: /transfers
 
+  # Aggregated Traded Volume
   - name: sum
     table_name: sum
     path: /sum
     
+  # Top Buyers
   - name: buyers
     table_name: buyers
     path: /buyers
-    
+
+
+  # Top Sellers  
   - name: sellers
     table_name: sellers
     path: /sellers
+
+  # Identified Sellers 
+  - name: identified_sellers
+    table_name: identified_sellers
+    path: /identified_sellers
+
+  # Identified Buyers
+  - name: identified_buyers
+    table_name: identified_buyers
+    path: /identified_buyers
     
-    
+  # Distinct Sellers   
+  - name: distinct_sellers
+    table_name: distinct_sellers
+    path: /distinct_sellers
+
+  # Distinct Buyers
+  - name: distinct_buyers
+    table_name: distinct_buyers
+    path: /distinct_buyers
